@@ -121,4 +121,11 @@ RSpec.describe DVLA::Atlas::Artefacts do
     expect(artefacts.first_expected_method_history).to eq(%w[abc])
     expect(artefacts.second_expected_method_history).to eq([123])
   end
+
+  describe '#to_hash' do
+    it 'excludes fields that are nil' do
+      artefacts.define_fields('unset_field', set_field: 'value')
+      expect(artefacts.to_hash).to eq({ 'set_field' => 'value' })
+    end
+  end
 end

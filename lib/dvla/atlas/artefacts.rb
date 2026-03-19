@@ -19,6 +19,19 @@ module DVLA
         end
       end
 
+      sig { returns(T::Hash[String, T.untyped]) }
+      def to_hash
+        instance_variables.each_with_object({}) do |var, hash|
+          name = var.to_s.delete_prefix('@')
+          next if name.end_with?('_history')
+
+          value = send(:"#{name}")
+          next if value.nil?
+
+          hash[name] = value
+        end
+      end
+
     private
 
       sig { params(name: T.any(String, Symbol)).void }
