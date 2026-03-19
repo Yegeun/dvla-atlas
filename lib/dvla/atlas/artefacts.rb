@@ -19,8 +19,8 @@ module DVLA
         end
       end
 
-      sig { returns(T::Hash[String, T.untyped]) }
-      def to_hash
+      sig { params(_options: T.untyped).returns(T::Hash[String, T.untyped]) }
+      def as_json(_options = nil)
         instance_variables.each_with_object({}) do |var, hash|
           name = var.to_s.delete_prefix('@')
           next if name.end_with?('_history')
