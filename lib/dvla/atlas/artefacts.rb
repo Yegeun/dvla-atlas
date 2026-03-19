@@ -23,10 +23,10 @@ module DVLA
       def as_json(_options = nil)
         instance_variables.each_with_object({}) do |var, hash|
           name = var.to_s.delete_prefix('@')
-          next if name.end_with?('_history')
-
           value = send(:"#{name}")
+
           next if value.nil?
+          next if name.end_with?('_history') && value.empty?
 
           hash[name] = value
         end

@@ -127,5 +127,19 @@ RSpec.describe DVLA::Atlas::Artefacts do
       artefacts.define_fields('unset_field', set_field: 'value')
       expect(artefacts.as_json).to eq({ 'set_field' => 'value' })
     end
+
+    it 'excludes history fields for fields that have never been changed' do
+      artefacts.define_fields(username: 'initial')
+      json = artefacts.as_json
+      expect(json).to eq({ 'username' => 'initial' })
+      expect(json).not_to have_key('username_history')
+    end
+
+    it 'includes history fields for fields that have been changed' do
+      artefacts.define_fields(username: 'initial')
+      artefacts.username = 'updated'
+      json = artefacts.as_json
+      expect(json).to eq({ 'username' => 'updated', 'username_history' => ['initial'] })
+    end
   end
 end
